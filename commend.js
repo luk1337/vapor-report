@@ -32,7 +32,7 @@ var helloMsgInterval = null;
 
 // Create custom plugin
 bot.use({
-    name: 'vapor-report',
+    name: 'vapor-commend',
     plugin: function(VaporAPI) {
         var Steam = VaporAPI.getSteam();
         var client = VaporAPI.getClient();
