@@ -16,7 +16,6 @@ fs.readdir(__dirname, function(err, filenames) {
     }
 
     filenames.forEach(function(filename) {
-        console.log(filename);
         if (filename != "protos.js" && filename != "updater.js") {
             fs.unlinkSync(__dirname + "/" + filename);
         }
