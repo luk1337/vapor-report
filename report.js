@@ -4,7 +4,7 @@ var fs = require('fs');
 var protos = require("./protos/protos.js");
 
 if (!process.argv[3]) {
-    console.log("Usage: node app.js [config file] [id]");
+    console.log("Usage: node report.js [config file] [id]");
     process.exit();
 }
 
