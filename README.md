@@ -1,6 +1,6 @@
 # Vapor-report
 
-A CS:GO report plugin based on [vapor](https://github.com/scholtzm/vapor) by [seishun](https://github.com/seishun)
+A CS:GO report/commend plugin based on [vapor](https://github.com/scholtzm/vapor) by [seishun](https://github.com/seishun)
 
 ## Installation
 * Download the repository ( use git clone or just press the green `Download` button )
@@ -9,6 +9,7 @@ A CS:GO report plugin based on [vapor](https://github.com/scholtzm/vapor) by [se
 
 ## Usage
     ./report.sh STEAMID64
+    ./commend.sh STEAMID64
 
 ## Credits
 * @Askwrite
