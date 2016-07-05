@@ -27,6 +27,7 @@ bot.use(vapor.plugins.fs);
 var ClientHello = 4006;
 var ClientWelcome = 4004;
 
+var clientTimeout = null;
 var helloMsgInterval = null;
 
 // Create custom plugin
@@ -53,11 +54,18 @@ bot.use({
                     }, new protos.CMsgClientHello({}).toBuffer());
                 }, 2000);
             }
+
+            clientTimeout = setTimeout(function() {
+                console.log("[INFO] Timed out: this account has no CS:GO subscribtion?");
+                bot.disconnect();
+                process.exit();
+            }, 10000);
         });
 
         steamGameCoordinator.on('message', function(header, buffer, callback) {
             switch (header.msg) {
                 case ClientWelcome:
+                    clearTimeout(clientTimeout);
                     clearInterval(helloMsgInterval);
                     console.log("[INFO] Trying to report the user!");
 
