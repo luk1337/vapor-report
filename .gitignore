@@ -1,3 +1,5 @@
 node_modules
 protos/*.proto
+users/*
+!users/example.json
 data-*
