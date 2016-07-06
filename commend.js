@@ -82,7 +82,10 @@ bot.use({
                         }),
                         tokens: 10
                     }).toBuffer());
-                    bot.disconnect();
+
+                    setTimeout(function() {
+                        bot.disconnect();
+                    }, 3000);
                     break;
                 case protos.ECsgoGCMsg.k_EMsgGCCStrike15_v2_MatchmakingGC2ClientHello:
                     console.log("[INFO] MM Client Hello sent!");
