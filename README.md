@@ -9,7 +9,9 @@ A CS:GO report/commend plugin based on [vapor](https://github.com/scholtzm/vapor
 
 ## Usage
     ./report.sh STEAMID64
+    ./reportAsync.sh STEAMID64
     ./commend.sh STEAMID64
+    ./commendAsync.sh STEAMID64
 
 ## Credits
 * @Askwrite
