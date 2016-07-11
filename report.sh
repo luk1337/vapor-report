@@ -1,4 +1,7 @@
 #!/bin/bash
+counter=0
+accounts=`ls users/[!example]*.json | wc -l`
+
 usage() {
     echo "[#] Usage: ./report.sh [steamID64]"
     exit 0
@@ -10,10 +13,10 @@ fi
 
 node protos/updater.js
 
-for user in users/*.json; do
-    if [ "$user" = "users/example.json" ]; then
-        continue
-    fi
-
+for user in `ls users/[!example]*.json`; do
     node report.js $user $1
+
+    # Increment and display the counter
+    counter=$((counter + 1))
+    echo "[INFO] Status : $counter/$accounts"
 done
