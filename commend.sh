@@ -1,6 +1,6 @@
 #!/bin/bash
 counter=0
-accounts=`ls users/[!example]*.json | wc -l`
+accounts=`find users -type f -not -name example.json | wc -l`
 
 usage() {
     echo "[#] Usage: ./commend.sh [steamID64]"
@@ -13,7 +13,7 @@ fi
 
 node protos/updater.js
 
-for user in `ls users/[!example]*.json`; do
+for user in `find users -type f -not -name example.json`; do
     node commend.js $user $1
 
     # Increment and print the counter
