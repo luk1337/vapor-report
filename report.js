@@ -20,8 +20,23 @@ bot.init(config);
 
 // Enable plugins we use
 bot.use(vapor.plugins.consoleLogger);
-bot.use(vapor.plugins.stdinSteamGuard);
 bot.use(vapor.plugins.fs);
+
+if (config["2FA"] && config["2FA"].length == 5) {
+    bot.use({
+        name: '2FA-steamguard',
+        plugin: function(VaporAPI) {
+            VaporAPI.registerHandler({
+                emitter: 'vapor',
+                event: 'steamGuard'
+            }, function(callback) {
+                callback(config["2FA"]);
+            });
+        }
+    });
+} else {
+    bot.use(vapor.plugins.stdinSteamGuard);
+}
 
 // Proto stuff
 var ClientHello = 4006;
