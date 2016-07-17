@@ -1,6 +1,6 @@
 #!/bin/bash
 usage() {
-    echo "[#] Usage: ./report.sh [steamID64...]"
+    echo "[#] Usage: ./reportAsync.sh [steamID64...]"
     exit 0
 }
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 usage() {
-    echo "[#] Usage: ./commend.sh [steamID64...]"
+    echo "[#] Usage: ./commendAsync.sh [steamID64...]"
     exit 0
 }
 
