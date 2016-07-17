@@ -5,7 +5,7 @@ $steamId = Read-Host -Prompt 'Enter the steamID64s you want to report'
 node protos/updater.js
 
 foreach ($account in $(Get-ChildItem .\users\*.json -Exclude example.json)) {
-    node report.js "$account" "$steamId"
+    iex "node report.js '$account' $steamId"
 
     $counter++
     echo "[INFO] Status : $counter/$accounts"

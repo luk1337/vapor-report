@@ -5,7 +5,7 @@ $steamId = Read-Host -Prompt 'Enter the steamID64s you want to commend'
 node protos/updater.js
 
 foreach ($account in $(Get-ChildItem .\users\*.json -Exclude example.json)) {
-    node commend.js "$account" "$steamId"
+    iex "node commend.js '$account' $steamId"
 
     $counter++
     echo "[INFO] Status : $counter/$accounts"
