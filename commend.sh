@@ -3,7 +3,7 @@ counter=0
 accounts=`find users -type f -not -name example.json | wc -l`
 
 usage() {
-    echo "[#] Usage: ./commend.sh [steamID64]"
+    echo "[#] Usage: ./commend.sh [steamID64...]"
     exit 0
 }
 
@@ -14,7 +14,13 @@ fi
 node protos/updater.js
 
 for user in `find users -type f -not -name example.json`; do
-    node commend.js $user $1
+    command="node commend.js $user"
+
+    for id in "$*"; do
+       command+=" $id"
+    done
+
+    $command
 
     # Increment and print the counter
     counter=$((counter + 1))
