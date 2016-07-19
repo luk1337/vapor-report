@@ -3,3 +3,4 @@ protos/*.proto
 users/*
 !users/example.json
 data-*
+daemon.py
