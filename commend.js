@@ -71,7 +71,7 @@ bot.use({
             }
 
             clientTimeout = setTimeout(function() {
-                console.log("[INFO] Timed out: this account has no CS:GO subscribtion?");
+                console.log("[INFO] Timed out: this account has no CS:GO subscription?");
                 bot.disconnect();
                 process.exit();
             }, 10000);
