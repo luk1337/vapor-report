@@ -1,7 +1,7 @@
 var fs = require("fs");
 var https = require("https");
 
-var baseUrl = "https://raw.githubusercontent.com/SteamDatabase/GameTracking/master/Protobufs/csgo/";
+var baseUrl = "https://raw.githubusercontent.com/SteamDatabase/GameTracking-CSGO/master/Protobufs/";
 var protos = [
     "base_gcmessages.proto",
     "steammessages.proto",
