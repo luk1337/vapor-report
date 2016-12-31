@@ -4,7 +4,7 @@ var fs = require('fs');
 var protos = require("./protos/protos.js");
 
 if (!process.argv[3]) {
-    console.log("Usage: node commend.js [config file] [id...]");
+    console.log("Usage: node commend.js [config file] [id]");
     process.exit();
 }
 
@@ -45,10 +45,6 @@ var ClientWelcome = 4004;
 var clientTimeout = null;
 var helloMsgInterval = null;
 
-// Counter
-var counter = 0;
-var idNum = process.argv.length - 3;
-
 // Create custom plugin
 bot.use({
     name: 'vapor-commend',
@@ -86,29 +82,25 @@ bot.use({
                 case ClientWelcome:
                     clearTimeout(clientTimeout);
                     clearInterval(helloMsgInterval);
-                    console.log("[INFO] Trying to commend the user(s)!");
+                    console.log("[INFO] Trying to commend the user!");
 
-                    for (i = 0; i < idNum; i++) {
-                        setTimeout(function(id) {
-                            steamGameCoordinator.send({
-                                msg: protos.ECsgoGCMsg.k_EMsgGCCStrike15_v2_ClientCommendPlayer,
-                                proto: { }
-                            }, new protos.CMsgGCCStrike15_v2_ClientCommendPlayer({
-                                accountId: new steamID(process.argv[3]).accountid,
-                                matchId: 8,
-                                commendation: new protos.PlayerCommendationInfo({
-                                    cmdFriendly: 1,
-                                    cmdTeaching: 2,
-                                    cmdLeader: 4
-                                }),
-                                tokens: 10
-                            }).toBuffer());
-                        }, i * 1500, process.argv[i + 3]);
-                    }
+                    steamGameCoordinator.send({
+                        msg: protos.ECsgoGCMsg.k_EMsgGCCStrike15_v2_ClientCommendPlayer,
+                        proto: { }
+                    }, new protos.CMsgGCCStrike15_v2_ClientCommendPlayer({
+                        accountId: new steamID(process.argv[3]).accountid,
+                        matchId: 8,
+                        commendation: new protos.PlayerCommendationInfo({
+                            cmdFriendly: 1,
+                            cmdTeaching: 2,
+                            cmdLeader: 4
+                        }),
+                        tokens: 10
+                    }).toBuffer());
 
                     setTimeout(function() {
                         bot.disconnect();
-                    }, (idNum - 1) * 1500 + 3000);
+                    }, 3000);
                     break;
                 case protos.ECsgoGCMsg.k_EMsgGCCStrike15_v2_MatchmakingGC2ClientHello:
                     console.log("[INFO] MM Client Hello sent!");

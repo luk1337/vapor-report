@@ -3,7 +3,7 @@ counter=0
 accounts=`find users -type f -not -name example.json | wc -l`
 
 usage() {
-    echo "[#] Usage: ./commend.sh [steamID64...]"
+    echo "[#] Usage: ./commend.sh [steamID64]"
     exit 0
 }
 

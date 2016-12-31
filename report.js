@@ -4,7 +4,7 @@ var fs = require('fs');
 var protos = require("./protos/protos.js");
 
 if (!process.argv[3]) {
-    console.log("Usage: node report.js [config file] [id...]");
+    console.log("Usage: node report.js [config file] [id]");
     process.exit();
 }
 
@@ -45,10 +45,6 @@ var ClientWelcome = 4004;
 var clientTimeout = null;
 var helloMsgInterval = null;
 
-// Counter
-var counter = 0;
-var idNum = process.argv.length - 3;
-
 // Create custom plugin
 bot.use({
     name: 'vapor-report',
@@ -86,36 +82,28 @@ bot.use({
                 case ClientWelcome:
                     clearTimeout(clientTimeout);
                     clearInterval(helloMsgInterval);
-                    console.log("[INFO] Trying to report the user(s)!");
+                    console.log("[INFO] Trying to report the user!");
 
-                    for (i = 0; i < idNum; i++) {
-                        setTimeout(function(id) {
-                            steamGameCoordinator.send({
-                                msg: protos.ECsgoGCMsg.k_EMsgGCCStrike15_v2_ClientReportPlayer,
-                                proto: { }
-                            }, new protos.CMsgGCCStrike15_v2_ClientReportPlayer({
-                                accountId: new steamID(id).accountid,
-                                matchId: 8,
-                                rptAimbot: 2,
-                                rptWallhack: 3,
-                                rptSpeedhack: 4,
-                                rptTeamharm: 5,
-                                rptTextabuse: 6,
-                                rptVoiceabuse: 7
-                            }).toBuffer());
-                        }, i * 1500, process.argv[i + 3]);
-                    }
+                    steamGameCoordinator.send({
+                        msg: protos.ECsgoGCMsg.k_EMsgGCCStrike15_v2_ClientReportPlayer,
+                        proto: { }
+                    }, new protos.CMsgGCCStrike15_v2_ClientReportPlayer({
+                        accountId: new steamID(process.argv[3]).accountid,
+                        matchId: 8,
+                        rptAimbot: 2,
+                        rptWallhack: 3,
+                        rptSpeedhack: 4,
+                        rptTeamharm: 5,
+                        rptTextabuse: 6,
+                        rptVoiceabuse: 7
+                    }).toBuffer());
                     break;
                 case protos.ECsgoGCMsg.k_EMsgGCCStrike15_v2_MatchmakingGC2ClientHello:
                     console.log("[INFO] MM Client Hello sent!");
                     break;
                 case protos.ECsgoGCMsg.k_EMsgGCCStrike15_v2_ClientReportResponse:
                     console.log("[INFO] Report with confirmation ID: " + protos.CMsgGCCStrike15_v2_ClientReportResponse.decode(buffer).confirmationId.toString() + " sent!");
-
-                    counter++;
-                    if (idNum == counter) {
-                        bot.disconnect();
-                    }
+                    bot.disconnect();
                     break;
                 default:
                     console.log(header);
