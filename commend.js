@@ -1,5 +1,6 @@
 var vapor = require('vapor');
 var steamID = require("steamid");
+var steamTotp = require('steam-totp');
 var fs = require('fs');
 var protos = require("./protos/protos.js");
 
@@ -22,15 +23,16 @@ bot.init(config);
 bot.use(vapor.plugins.consoleLogger);
 bot.use(vapor.plugins.fs);
 
-if (config["2FA"] && config["2FA"].length == 5) {
+// Add our custom 2FA-steamguard plugin
+if (config["shared_secret"] && config["shared_secret"].length == 28) {
     bot.use({
-        name: '2FA-steamguard',
+	name: '2FA-steamguard',
         plugin: function(VaporAPI) {
             VaporAPI.registerHandler({
                 emitter: 'vapor',
                 event: 'steamGuard'
             }, function(callback) {
-                callback(config["2FA"]);
+                callback(steamTotp.generateAuthCode(config["shared_secret"]));
             });
         }
     });
