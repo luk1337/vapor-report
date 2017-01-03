@@ -102,7 +102,6 @@ bot.use({
         steamGameCoordinator.on('message', function(header, buffer, callback) {
             switch (header.msg) {
                 case ClientWelcome:
-                    clearTimeout(clientTimeout);
                     clearInterval(helloMsgInterval);
                     console.log("[INFO] Trying to commend the user!");
 
