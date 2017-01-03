@@ -26,7 +26,7 @@ bot.use(vapor.plugins.fs);
 // Add our custom 2FA-steamguard plugin
 if (config["shared_secret"] && config["shared_secret"].length == 28) {
     bot.use({
-	name: '2FA-steamguard',
+        name: '2FA-steamguard',
         plugin: function(VaporAPI) {
             VaporAPI.registerHandler({
                 emitter: 'vapor',
