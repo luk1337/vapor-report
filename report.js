@@ -47,6 +47,16 @@ var ClientWelcome = 4004;
 var clientTimeout = null;
 var helloMsgInterval = null;
 
+function stop(msg) {
+    if (msg)
+        console.log(msg);
+
+    clearTimeout(clientTimeout);
+    clearInterval(helloMsgInterval);
+
+    bot.disconnect();
+}
+
 // Create custom plugin
 bot.use({
     name: 'vapor-report',
@@ -63,26 +73,35 @@ bot.use({
         }, function() {
             steamUser.gamesPlayed(clientMessage);
 
-            if (steamGameCoordinator) {
-                helloMsgInterval = setInterval(function() {
-                    steamGameCoordinator.send({
-                        msg: ClientHello,
-                        proto: { }
-                    }, new protos.CMsgClientHello({}).toBuffer());
-                }, 2000);
-            }
+            helloMsgInterval = setInterval(function() {
+                if (!client.connected)
+                    return;
+
+                if (steamGameCoordinator._client._connection == undefined)
+                    stop("[INFO] Disconnected: Someone is playing on this account right now");
+
+                steamGameCoordinator.send({
+                    msg: ClientHello,
+                    proto: { }
+                }, new protos.CMsgClientHello({}).toBuffer());
+            }, 2000);
 
             clientTimeout = setTimeout(function() {
-                console.log("[INFO] Timed out: this account has no CS:GO subscription?");
-                bot.disconnect();
-                process.exit();
-            }, 10000);
+                stop("[INFO] Timed out after 15 seconds");
+            }, 15000);
+        });
+
+        VaporAPI.registerHandler({
+            emitter: 'vapor',
+            event: 'disconnected'
+        }, function(error) {
+            clearTimeout(clientTimeout);
+            clearInterval(helloMsgInterval);
         });
 
         steamGameCoordinator.on('message', function(header, buffer, callback) {
             switch (header.msg) {
                 case ClientWelcome:
-                    clearTimeout(clientTimeout);
                     clearInterval(helloMsgInterval);
                     console.log("[INFO] Trying to report the user!");
 
@@ -104,8 +123,7 @@ bot.use({
                     console.log("[INFO] MM Client Hello sent!");
                     break;
                 case protos.ECsgoGCMsg.k_EMsgGCCStrike15_v2_ClientReportResponse:
-                    console.log("[INFO] Report with confirmation ID: " + protos.CMsgGCCStrike15_v2_ClientReportResponse.decode(buffer).confirmationId.toString() + " sent!");
-                    bot.disconnect();
+                    stop("[INFO] Report with confirmation ID: " + protos.CMsgGCCStrike15_v2_ClientReportResponse.decode(buffer).confirmationId.toString() + " sent!");
                     break;
                 default:
                     console.log(header);
@@ -120,6 +138,6 @@ bot.connect();
 
 // Handle SIGINT (Ctrl+C) gracefully
 process.on('SIGINT', function() {
-    bot.disconnect();
+    stop();
     setTimeout(process.exit, 1000, 0);
 });

@@ -47,6 +47,16 @@ var ClientWelcome = 4004;
 var clientTimeout = null;
 var helloMsgInterval = null;
 
+function stop(msg) {
+    if (msg)
+        console.log(msg);
+
+    clearTimeout(clientTimeout);
+    clearInterval(helloMsgInterval);
+
+    bot.disconnect();
+}
+
 // Create custom plugin
 bot.use({
     name: 'vapor-commend',
@@ -63,20 +73,30 @@ bot.use({
         }, function() {
             steamUser.gamesPlayed(clientMessage);
 
-            if (steamGameCoordinator) {
-                helloMsgInterval = setInterval(function() {
-                    steamGameCoordinator.send({
-                        msg: ClientHello,
-                        proto: { }
-                    }, new protos.CMsgClientHello({}).toBuffer());
-                }, 2000);
-            }
+            helloMsgInterval = setInterval(function() {
+                if (!client.connected)
+                    return;
+
+                if (steamGameCoordinator._client._connection == undefined)
+                    stop("[INFO] Disconnected: Someone is playing on this account right now");
+
+                steamGameCoordinator.send({
+                    msg: ClientHello,
+                    proto: { }
+                }, new protos.CMsgClientHello({}).toBuffer());
+            }, 2000);
 
             clientTimeout = setTimeout(function() {
-                console.log("[INFO] Timed out: this account has no CS:GO subscription?");
-                bot.disconnect();
-                process.exit();
-            }, 10000);
+                stop("[INFO] Timed out after 15 seconds");
+            }, 15000);
+        });
+
+        VaporAPI.registerHandler({
+            emitter: 'vapor',
+            event: 'disconnected'
+        }, function(error) {
+            clearTimeout(clientTimeout);
+            clearInterval(helloMsgInterval);
         });
 
         steamGameCoordinator.on('message', function(header, buffer, callback) {
@@ -101,7 +121,7 @@ bot.use({
                     }).toBuffer());
 
                     setTimeout(function() {
-                        bot.disconnect();
+                        stop();
                     }, 3000);
                     break;
                 case protos.ECsgoGCMsg.k_EMsgGCCStrike15_v2_MatchmakingGC2ClientHello:
