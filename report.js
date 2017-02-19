@@ -1,6 +1,7 @@
 var vapor = require('vapor');
 var steamID = require("steamid");
 var steamTotp = require('steam-totp');
+var csgo = require('csgo');
 var fs = require('fs');
 var protos = require("./protos/protos.js");
 
@@ -57,6 +58,22 @@ function stop(msg) {
     bot.disconnect();
 }
 
+function decodeMatchId(code) {
+    if (code == null) {
+        return 8;
+    }
+
+    if (typeof code === 'number') {
+        return code;
+    }
+
+    if (code.startsWith("steam://")) {
+        code = code.substring(61);
+    }
+
+    return new csgo.SharecodeDecoder(code).decode().matchId;
+}
+
 // Create custom plugin
 bot.use({
     name: 'vapor-report',
@@ -110,7 +127,7 @@ bot.use({
                         proto: { }
                     }, new protos.CMsgGCCStrike15_v2_ClientReportPlayer({
                         accountId: new steamID(process.argv[3]).accountid,
-                        matchId: 8,
+                        matchId: decodeMatchId(process.argv[4]),
                         rptAimbot: 2,
                         rptWallhack: 3,
                         rptSpeedhack: 4,

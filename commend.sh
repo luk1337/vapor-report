@@ -16,8 +16,8 @@ node protos/updater.js
 for user in `find users -type f -not -name example.json`; do
     command="node commend.js $user"
 
-    for id in "$*"; do
-       command+=" $id"
+    for arg in "$*"; do
+       command+=" $arg"
     done
 
     $command

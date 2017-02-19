@@ -9,6 +9,7 @@
   "author": "LuK1337",
   "license": "ISC",
   "dependencies": {
+    "csgo": "^1.5.4",
     "fs": "0.0.2",
     "https": "^1.0.0",
     "protobufjs": "^5.0.1",

@@ -1,6 +1,6 @@
 #!/bin/bash
 usage() {
-    echo "[#] Usage: ./reportAsync.sh [steamID64]"
+    echo "[#] Usage: ./reportAsync.sh [steamID64] (matchId)"
     exit 0
 }
 
@@ -14,8 +14,8 @@ for user in `find users -type f -not -name example.json`; do
     session_name="vapor-report_$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)"
     command="node report.js $user"
 
-    for id in "$*"; do
-       command+=" $id"
+    for arg in "$*"; do
+       command+=" $arg"
     done
 
     screen -dmS $session_name $command
