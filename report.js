@@ -64,7 +64,7 @@ function decodeMatchId(code) {
     }
 
     if (!isNaN(parseInt(code))) {
-        return parseInt(code);
+        return code;
     }
 
     if (code.startsWith("steam://")) {
